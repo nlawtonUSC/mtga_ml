@@ -14,12 +14,16 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
+import os
+import sys
+sys.path.insert(0, os.path.abspath('../'))
+
 
 # -- Project information -----------------------------------------------------
 
-project = "Basic Sphinx Example Project"
-copyright = "2022, Read the Docs core team"
-author = "Read the Docs core team"
+project = "MTGA ML"
+copyright = "2022, Neal Lawton"
+author = "Neal Lawton"
 
 
 # -- General configuration ---------------------------------------------------
