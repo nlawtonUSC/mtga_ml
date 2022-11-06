@@ -28,12 +28,10 @@ def load_17lands_data(output_dir, mtga_set, mtga_format, data_type, nrows=None,
 
     Examples:
         >>> df = load_17lands_data(
-                data_dir,
-                nrows, 
-                mtga_set="DMU",
-                mtga_format="PremierDraft",
-                data_type="draft",
-                force_download=False
+                "/data",
+                "DMU",
+                "PremierDraft",
+                "draft"
             )
     """
     # Construct URL of 17lands dataset
@@ -70,12 +68,10 @@ class PicksDataset(Dataset):
 
     Examples:
         >>> df = load_17lands_data(
-                data_dir,
-                nrows, 
-                mtga_set="DMU",
-                mtga_format="PremierDraft",
-                data_type="draft",
-                force_download=False
+                "/data",
+                "DMU",
+                "PremierDraft",
+                "draft"
             )
         >>> keys = ["pool", "pack", "pick"]
         >>> draft_dataset = PicksDataset(df, keys)
