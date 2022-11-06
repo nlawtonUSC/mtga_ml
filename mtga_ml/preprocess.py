@@ -35,18 +35,23 @@ def load_17lands_data(output_dir, mtga_set, mtga_format, data_type, nrows=None,
                 data_type="draft",
                 force_download=False
             )
-    """    
+    """
+    # Construct URL of 17lands dataset
     root = "https://17lands-public.s3.amazonaws.com/analysis_data/"
     data_dir = f"{data_type}_data/"
     filename = f"{data_type}_data_public.{mtga_set}.{mtga_format}.csv"
     url = root + data_dir + filename + ".gz"
+    # Local dataset destination
     csv_gz_path = os.path.join(output_dir, filename + ".gz")
     csv_path = os.path.join(output_dir, filename)
+    # Download
     if force_download or not os.path.exists(csv_gz_path):
         os.system(f"curl {url} --output {csv_gz_path}")
+    # Unzip
     if not os.path.exists(csv_path):
         os.system(f"gzip -dk {csv_gz_path}")
     return pd.read_csv(csv_path, nrows=nrows)
+
 
 class PicksDataset(Dataset):
     """Loads 17lands draft data as a PyTorch Dataset. Each row represents a
