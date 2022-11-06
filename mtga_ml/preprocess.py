@@ -11,9 +11,17 @@ from torch.utils.data import Dataset, DataLoader
 import requests
 
 class PicksDataset(Dataset):
-	"""
-	Loads 17lands draft data as a PyTorch Dataset. Each row represents a single
-	draft pick.
+	"""Loads 17lands draft data as a PyTorch Dataset. Each row represents a
+	single draft pick.
+
+	Args:
+		df (DataFrame): Raw 17lands draft dataset.
+		keys (list[str]): Column names to track.
+
+	Attributes:
+		card_names (list[str]): List of all card names that appear in the
+			column names of `df`.
+		num_cards (int): Length of `card_names`.
 	"""
 
 	def __init__(self, df, keys=None):
