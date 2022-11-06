@@ -25,7 +25,7 @@ def mlp(dims, activation_function, use_batchnorm=False, dropout_rate=0.0):
 		>>> # Deck classifier. `num_cards` is the number of cards in the target
 		>>> # format.
 		>>> h_dims = [50, 50]
-		>>> model = mlp([num_cards] + h_dims + [1])
+		>>> model = mlp([num_cards] + h_dims + [1], nn.ReLU())
 	"""
 	modules = []
 	modules.append(nn.Linear(dims[0], dims[1]))
