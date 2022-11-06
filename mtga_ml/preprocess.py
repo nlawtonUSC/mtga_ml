@@ -16,10 +16,10 @@ def load_17lands_data(output_dir, mtga_set, mtga_format, data_type, nrows=None,
 
     Args:
         output_dir(str): Directory to download the 17lands dataset to.
-        nrows(int): Number of rows to load. If `None`, loads all rows.
         mtga_set(str): MTGA set identifier, e.g., `"DMU"`.
         mtga_format(str): MTGA format identifier, e.g., `"PremierDraft"`.
         data_type(str): 17lands dataset type identifier, e.g., "draft".
+        nrows(int): Number of rows to load. If `None`, loads all rows.
         force_download(bool): If true, downloads the 17lands dataset to
             `output_dir` even if the dataset already exists in that location.
 
