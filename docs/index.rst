@@ -15,3 +15,4 @@ Contents
 .. toctree::
 
    Home <self>
+   preprocess
