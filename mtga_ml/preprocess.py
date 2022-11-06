@@ -46,23 +46,19 @@ def load_17lands_data(output_dir, mtga_set, mtga_format, dataset_type,
     # Local dataset destination
     if not os.path.isdir(output_dir):
         os.makedirs(output_dir, exist_ok=True)
-    csv_gz_path = os.path.join(output_dir, filename + ".gz")
-    csv_path = os.path.join(output_dir, filename)
+    csv_path = os.path.join(output_dir, filename + ".gz")
     # Download
-    if force_download or not os.path.exists(csv_gz_path):
+    if force_download or not os.path.exists(csv_path):
         print(f"downloading: {url}")
         with requests.get(url, stream=True) as r:
             r.raise_for_status()
             content_length = int(r.headers["Content-Length"])
             max_bytes = content_length
             progress_bar = tqdm(range(max_bytes))
-            with open(csv_gz_path, 'wb') as f:
+            with open(csv_path, 'wb') as f:
                 for chunk in r.iter_content(chunk_size=chunk_size):
                     f.write(chunk)
                     progress_bar.update(chunk_size)
-    # Unzip
-    if not os.path.exists(csv_path):
-        os.system(f"gzip -dk {csv_gz_path}")
     return pd.read_csv(csv_path, nrows=nrows)
 
 
