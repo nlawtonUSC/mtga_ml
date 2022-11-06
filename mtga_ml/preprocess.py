@@ -17,7 +17,8 @@ class PicksDataset(Dataset):
     Args:
         df (DataFrame): Raw 17lands draft dataset.
         keys (list[str]): Keys to collate in `__getitem__`. May include
-            names of columns in `df` as well as "pool" and "pack".
+            names of columns in `df` as well as "pool" and "pack". If
+            "None", uses all valid keys.
 
     Attributes:
         card_names (list[str]): List of all card names that appear in the
