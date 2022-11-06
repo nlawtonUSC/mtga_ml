@@ -68,6 +68,8 @@ sphinxcontrib-serializinghtml==1.1.5
     # via sphinx
 torch==1.13.0
     # via -r docs/requirements.in
+tqdm==4.64.1
+    # via -r docs/requirements.in
 typing-extensions==4.4.0
     # via torch
 urllib3==1.26.9
