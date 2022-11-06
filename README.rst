@@ -1,7 +1,7 @@
 README title
 ===============================================
 
-.. image:: https://readthedocs.org/projects/example-sphinx-basic/badge/?version=latest
+.. image:: https://img.shields.io/readthedocs/nlawtonusc-mtga-ml
     :target: https://nlawtonusc-mtga-ml.readthedocs.io/en/latest/
     :alt: Documentation Status
 
