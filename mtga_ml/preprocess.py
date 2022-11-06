@@ -10,6 +10,7 @@ import torch
 from torch.utils.data import Dataset, DataLoader
 import requests
 
+
 def load_17lands_data(output_dir, mtga_set, mtga_format, dataset_type,
     nrows=None, force_download=False):
     """Loads a public dataset from 17lands.
@@ -18,7 +19,7 @@ def load_17lands_data(output_dir, mtga_set, mtga_format, dataset_type,
         output_dir(str): Directory to download the 17lands dataset to.
         mtga_set(str): MTGA set identifier, e.g., `"DMU"`.
         mtga_format(str): MTGA format identifier, e.g., `"PremierDraft"`.
-        dataset_type(str): 17lands dataset type identifier, e.g., "draft".
+        dataset_type(str): 17lands dataset type identifier, e.g., `"draft"`.
         nrows(int): Number of rows to load. If `None`, loads all rows.
         force_download(bool): If true, downloads the 17lands dataset to
             `output_dir` even if the dataset already exists in that location.
