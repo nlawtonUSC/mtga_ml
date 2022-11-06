@@ -1,3 +1,7 @@
+"""
+Machine learning model architectures.
+"""
+
 import torch
 import torch.nn as nn
 
