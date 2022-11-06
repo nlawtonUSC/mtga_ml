@@ -88,49 +88,19 @@ class PickAdvisor(nn.Module):
 		raise NotImplementedError("`pick` not implemented.")
 
 
-class PickPredictor(nn.Module):
-	"""Class for predicting a pick in a given draft state."""
-
-	def forward(self, draft_state):
-		"""Computes pick prediction logits given a draft state.
-
-		Args:
-			draft_state(dict): The state of the draft up until the pick under
-				consideration.
-
-		Returns:
-			A tensor of shape `(num_cards)` of pick prediction logits.
-		"""
-		return self.model(draft_state)
-
-
-	def pick(self, draft_state):
-		"""Computes human-readable pick prediction probabilities.
-
-		Args:
-			draft_state(dict): The state of the draft up until the pick under
-				consideration.
-
-		Returns:
-			A tensor of shape `(num_cards)` of pick prediction probabilities.
-		"""
-		logits = self.forward(draft_state)
-		probs = F.softmax(logits, -1)
-		return probs
-
-
-class PoolPackPickPredictor(nn.Module):
+class PoolPackPickPredictor(PickAdvisor):
 	"""Class for predicting human picks from the pool and pack of the draft state.
 
 	Args:
 		model(nn.Module): Takes a draft state pool as input and outputs a pick
-			score for each card in the format.
+			prediction logit for each card in the format.
+		card_names(list[str]): A list of the names of all cards in the target
+			format.
 		not_in_pack_val(float): Logits for cards not in the pack are set to this
 			value. Should be a large negative number.
 	"""
-	def __init__(self, model, not_in_pack_val=-1e3):
-		super().__init__()
-		self.model = model
+	def __init__(self, model, card_names, not_in_pack_val=-1e3):
+		super().__init__(model, card_names)
 		self.not_in_pack_val = not_in_pack_val
 
 	def forward(self, draft_state):
@@ -146,6 +116,20 @@ class PoolPackPickPredictor(nn.Module):
 		format_logits = self.model(draft_state["pool"])
 		mask = draft_state["pack"]
 		return format_logits * mask - self.not_in_pack_val * (1 - mask)
+
+	def pick(self, draft_state):
+		"""Computes human-readable pick prediction probabilities.
+
+		Args:
+			draft_state(dict): The state of the draft up until the pick under
+				consideration.
+
+		Returns:
+			A tensor of shape `(num_cards)` of pick prediction probabilities.
+		"""
+		logits = self.forward(draft_state)
+		probs = F.softmax(logits, -1)
+		return probs
 
 
 
