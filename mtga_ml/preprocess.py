@@ -10,6 +10,44 @@ import torch
 from torch.utils.data import Dataset, DataLoader
 import requests
 
+def load_17lands_data(output_dir, nrows=None, mtga_set, mtga_format, data_type,
+        force_download=False):
+    """Loads a public dataset from 17lands.
+
+    Args:
+        output_dir(str): Directory to download the 17lands dataset to.
+        nrows(int): Number of rows to load. If `None`, loads all rows.
+        mtga_set(str): MTGA set identifier, e.g., `"DMU"`.
+        mtga_format(str): MTGA format identifier, e.g., `"PremierDraft"`.
+        data_type(str): 17lands dataset type identifier, e.g., "draft".
+        force_download(bool): If true, downloads the 17lands dataset to
+            `output_dir` even if the dataset already exists in that location.
+
+    Returns:
+        The 17lands dataset as a Pandas `DataFrame`.
+
+    Examples:
+        >>> df = load_17lands_data(
+                data_dir,
+                nrows, 
+                mtga_set="DMU",
+                mtga_format="PremierDraft",
+                data_type="draft",
+                force_download=False
+            )
+    """    
+    root = "https://17lands-public.s3.amazonaws.com/analysis_data/"
+    data_dir = f"{data_type}_data/"
+    filename = f"{data_type}_data_public.{mtga_set}.{mtga_format}.csv"
+    url = root + data_dir + filename + ".gz"
+    csv_gz_path = os.path.join(output_dir, filename + ".gz")
+    csv_path = os.path.join(output_dir, filename)
+    if force_download or not os.path.exists(csv_gz_path):
+        os.system(f"curl {url} --output {csv_gz_path}")
+    if not os.path.exists(csv_path):
+        os.system(f"gzip -dk {csv_gz_path}")
+    return pd.read_csv(csv_path, nrows=nrows)
+
 class PicksDataset(Dataset):
     """Loads 17lands draft data as a PyTorch Dataset. Each row represents a
     single draft pick.
@@ -18,7 +56,7 @@ class PicksDataset(Dataset):
         df (DataFrame): Raw 17lands draft dataset.
         keys (list[str]): Keys to collate in `__getitem__`. May include
             names of columns in `df` as well as "pool" and "pack". If
-            "None", uses all valid keys.
+            `None`, uses all valid keys.
 
     Attributes:
         card_names (list[str]): List of all card names that appear in the
