@@ -4,15 +4,17 @@ Parse and preprocess MTGA data, such as decklists, 17lands data, and scryfall da
 
 import csv
 import os
+import gzip
+import requests
 
 import pandas as pd
 import torch
 from torch.utils.data import Dataset, DataLoader
-import requests
+from tqdm.auto import tqdm
 
 
 def load_17lands_data(output_dir, mtga_set, mtga_format, dataset_type,
-    nrows=None, force_download=False):
+    nrows=None, chunk_size=8192, force_download=False):
     """Loads a public dataset from 17lands.
 
     Args:
@@ -21,6 +23,7 @@ def load_17lands_data(output_dir, mtga_set, mtga_format, dataset_type,
         mtga_format(str): MTGA format identifier, e.g., `"PremierDraft"`.
         dataset_type(str): 17lands dataset type identifier, e.g., `"draft"`.
         nrows(int): Number of rows to load. If `None`, loads all rows.
+        chunk_size(int): Chunk size to use for streaming download of dataset.
         force_download(bool): If true, downloads the 17lands dataset to
             `output_dir` even if the dataset already exists in that location.
 
@@ -41,11 +44,22 @@ def load_17lands_data(output_dir, mtga_set, mtga_format, dataset_type,
     filename = f"{dataset_type}_data_public.{mtga_set}.{mtga_format}.csv"
     url = root + data_dir + filename + ".gz"
     # Local dataset destination
+    if not os.path.isdir(output_dir):
+        os.makedirs(output_dir, exist_ok=True)
     csv_gz_path = os.path.join(output_dir, filename + ".gz")
     csv_path = os.path.join(output_dir, filename)
     # Download
     if force_download or not os.path.exists(csv_gz_path):
-        os.system(f"curl {url} --output {csv_gz_path}")
+        print(f"downloading: {url}")
+        with requests.get(url, stream=True) as r:
+            r.raise_for_status()
+            content_length = int(r.headers["Content-Length"])
+            max_bytes = content_length
+            progress_bar = tqdm(range(max_bytes))
+            with open(csv_gz_path, 'wb') as f:
+                for chunk in r.iter_content(chunk_size=chunk_size):
+                    f.write(chunk)
+                    progress_bar.update(chunk_size)
     # Unzip
     if not os.path.exists(csv_path):
         os.system(f"gzip -dk {csv_gz_path}")
