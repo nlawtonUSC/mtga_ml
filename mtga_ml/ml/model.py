@@ -22,8 +22,8 @@ def mlp(dims, activation_function, use_batchnorm=False, dropout_rate=0.0):
 		MLP model as an `nn.Module`.
 
 	Examples:
-		# Deck classifier. `num_cards` is the number of cards in the target
-		# format.
+		>>> # Deck classifier. `num_cards` is the number of cards in the target
+		>>> # format.
 		>>> h_dims = [50, 50]
 		>>> model = mlp([num_cards] + h_dims + [1])
 	"""
