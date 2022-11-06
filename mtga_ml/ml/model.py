@@ -120,8 +120,7 @@ class PickPredictor(nn.Module):
 
 
 class PoolPackPickPredictor(nn.Module):
-	"""Class for predicting human picks from the pool and pack of the draft
-		state.
+	"""Class for predicting human picks from the pool and pack of the draft state.
 
 	Args:
 		model(nn.Module): Takes a draft state pool as input and outputs a pick
