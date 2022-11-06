@@ -1,4 +1,4 @@
 Preprocess
 ==========
 
-.. automodule:: preprocess 
+.. automodule:: mtga_ml.preprocess 
