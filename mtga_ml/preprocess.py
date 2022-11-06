@@ -16,18 +16,28 @@ class PicksDataset(Dataset):
 
 	Args:
 		df (DataFrame): Raw 17lands draft dataset.
-		keys (list[str]): Column names to track.
+		keys (list[str]): Keys to collate in `__getitem__`. May include
+			names of columns in `df` as well as "pool" and "pack".
 
 	Attributes:
 		card_names (list[str]): List of all card names that appear in the
 			column names of `df`.
 		num_cards (int): Length of `card_names`.
+
+	Examples:
+		>>> df = load_17lands_data(
+				data_dir,
+				nrows, 
+				mtga_set="DMU",
+				mtga_format="PremierDraft",
+				data_type="draft",
+				force_download=False
+			)
+		>>> keys = ["pool", "pack", "pick"]
+		>>> draft_dataset = PicksDataset(df, keys)
 	"""
 
 	def __init__(self, df, keys=None):
-		"""
-		Preprocesses 17lands draft data.
-		"""
 		# Read `.csv` with `pandas`.
 		self.df = df
 		# keys to collate in `__getitem__`.
@@ -56,10 +66,18 @@ class PicksDataset(Dataset):
 		self.pick_idx, = self.df.columns.get_indexer(["pick"])
 
 	def __len__(self):
+		"""Number of rows in dataset."""
 		return self.df.shape[0]
 
 	def __getitem__(self, idx):
-		""" `pool` and `pack` are tensors with shape `(num_cards)`. `pick_idx` is an integer. """
+		"""Fetch row from dataset.
+
+		Args:
+			idx(int): Index of row to return.
+
+		Returns:
+			A `dict` representation of the row at index `idx`.
+		"""
 		row = self.df.iloc[idx]
 		batch = dict()
 		for key in self.keys:
