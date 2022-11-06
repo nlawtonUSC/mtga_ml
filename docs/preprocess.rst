@@ -7,4 +7,4 @@ Preprocess
 
 .. automethod:: mtga_ml.preprocess.PicksDataset.__len__
 
-.. automethod:: mtga_ml.preprocess.PicksDataset.__getitem___
+.. automethod:: mtga_ml.preprocess.PicksDataset.__getitem__
