@@ -115,7 +115,7 @@ class PoolPackPickPredictor(PickAdvisor):
 		"""
 		format_logits = self.model(draft_state["pool"])
 		mask = draft_state["pack"]
-		return format_logits * mask - self.not_in_pack_val * (1 - mask)
+		return format_logits * mask + self.not_in_pack_val * (1 - mask)
 
 	def pick(self, draft_state):
 		"""Computes human-readable pick prediction probabilities.
