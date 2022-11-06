@@ -2,4 +2,3 @@ Sphinx>=5,<6
 sphinx_rtd_theme
 torch
 pandas
-sphinxcontrib-napoleon 

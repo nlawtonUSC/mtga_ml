@@ -35,7 +35,7 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.intersphinx",
-    "sphinxcontrib.napoleon"
+    "sphinx.ext.napoleon"
 ]
 
 intersphinx_mapping = {
