@@ -3,6 +3,6 @@ requires = ["flit_core >=3.2,<4"]
 build-backend = "flit_core.buildapi"
 
 [project]
-name = "mtga_ml"
+name = "my_proj"
 authors = [{name = "Neal Lawton", email = "nlawton@usc.edu"}]
 dynamic = ["version", "description"]
