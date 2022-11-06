@@ -10,7 +10,7 @@ import torch
 from torch.utils.data import Dataset, DataLoader
 import requests
 
-def load_17lands_data(output_dir, nrows=None, mtga_set, mtga_format, data_type,
+def load_17lands_data(output_dir, mtga_set, mtga_format, data_type, nrows=None,
         force_download=False):
     """Loads a public dataset from 17lands.
 
