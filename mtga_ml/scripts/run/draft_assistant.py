@@ -82,14 +82,14 @@ class DraftAssistant:
 		print("**packlist**")
 		for idx, count in enumerate(self.pack):
 			if count > 0:
-				print(f"{self.card_names[idx]}: {int(count)}")
+				print(f"{self.card_names[idx]} {int(count)}")
 
 	def pool_list(self):
 		"""Print all cards in the current pool"""
 		print("**poollist**")
 		for idx, count in enumerate(self.pool):
 			if count > 0:
-				print(f"{self.card_names[idx]}: {int(count)}")
+				print(f"{self.card_names[idx]} {int(count)}")
 
 	def help(self):
 		"""Print help string."""
