@@ -1,4 +1,4 @@
-mtga_ml
+:code:`mtga_ml`
 ===============================================
 
 .. image:: https://img.shields.io/readthedocs/nlawtonusc-mtga-ml
@@ -7,7 +7,7 @@ mtga_ml
 
 .. This README.rst should work on Github and is also included in the Sphinx documentation project in docs/ - therefore, README.rst uses absolute links for most things so it renders properly on GitHub
 
-`mtga_ml` is a library of machine learning tools for analyzing the 17lands MTGA public datasets. `mtga_ml` is for
+:code:`mtga_ml` is a library of machine learning tools for analyzing the 17lands MTGA public datasets. :code:`mtga_ml` is for
 
 * MTGA users looking to use machine learning to enhance their gameplay
 
@@ -20,6 +20,6 @@ Installation
 
 1. Clone this repoistory.
 
-2. `cd` into this repository from the terminal on your local computer.
+2. :code:`cd` into this repository from the terminal on your local computer.
 
-3. Run `pip install -r requirements.txt`.
+3. Run :code:`pip install -r requirements.txt`.
