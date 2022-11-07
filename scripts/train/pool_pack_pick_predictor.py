@@ -85,6 +85,11 @@ def main():
 		layer of the MLP pick prediction model."
 	)
 
+	parser.add_argument(
+		"--force_download", action="store_true",
+		help="Force download of specified 17lands dataset."
+	)
+
 	args = parser.parse_args()
 
 	if not os.path.isdir(args.checkpoint_dir):
@@ -94,11 +99,11 @@ def main():
 
 	df = load_17lands_data(
 		args.data_dir,
-		args.mtga_set, #"DMU",
-		args.mtga_format, # "PremierDraft",
+		args.mtga_set,
+		args.mtga_format,
 		"draft",
 		args.nrows, 
-		force_download=False
+		force_download=args.force_download
 	)
 
 	keys = ["pool", "pack", "pick"]
