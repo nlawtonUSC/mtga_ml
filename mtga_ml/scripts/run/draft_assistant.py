@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+"""
+Command line UI for using trained a `PickModel` to advise an MTGA draft.
+"""
+
 import sys
 sys.path.append('')
 

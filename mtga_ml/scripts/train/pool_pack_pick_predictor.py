@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+"""
+Train an MLP to predict human MTGA draft picks from the pool and pack of the draft state.
+"""
+
 import sys
 sys.path.append('')
 
@@ -20,7 +24,7 @@ def main():
 	# Parse arguments
 
 	parser = argparse.ArgumentParser(
-		description="Train an MLP to predict human MTGA draft picks from 17lands data."
+		description="Train an MLP to predict human MTGA draft picks from the pool and pack of the draft state."
 	)
 
 	parser.add_argument(
