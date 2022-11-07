@@ -9,7 +9,7 @@
 
 :code:`mtga_ml` is a library of machine learning tools for analyzing the 17lands MTGA public datasets. :code:`mtga_ml` is for
 
-* MTGA users looking to use machine learning to enhance their gameplay
+* MTGA users looking to use machine learning to improve their gameplay
 
 * Machine learning hobbyists looking for inspiration and examples of projects using the 17lands public datasets
 
@@ -18,7 +18,7 @@
 Installation
 ------------
 
-1. Clone this repoistory.
+1. Clone this repository.
 
 2. :code:`cd` into this repository from the terminal on your local computer.
 
