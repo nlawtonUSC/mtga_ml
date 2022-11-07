@@ -27,18 +27,25 @@ class DraftAssistant:
 		self.pack = torch.zeros(self.num_cards)
 		self.pool = torch.zeros(self.num_cards)
 
-	def findCardIdx(self, card_name):
-		"""Find the card whose name contains `substr`."""
-		if card_name == "":
+	def findCardIdx(self, substr):
+		"""Find the card whose name contains `substr`.
+
+		If multiple card names contain `substr`, searches for an exact match instead.
+		"""
+		if substr == "":
 			return []
-		card_name = card_name.lower()
-		matches = [ i for (i,x) in enumerate(self.lower_card_names) if card_name in x ]
+		substr = substr.lower()
+		matches = [ i for (i,x) in enumerate(self.lower_card_names) if substr in x ]
 		if len(matches) == 0:
-			print(f"WARNING: No matches found for \"{card_name}\"")
+			print(f"WARNING: No matches found for \"{substr}\"")
 			return matches
 		elif len(matches) > 1:
-			print(f"WARNING: Multiple card matches for \"{card_name}\": {', '.join([self.card_names[i] for i in matches])}")
-			return matches
+			exact_matches = [ i for (i,x) in enumerate(self.lower_card_names) if substr == x ]
+			if len(exact_matches) == 0:
+				print(f"WARNING: Multiple card matches for \"{substr}\": {', '.join([self.card_names[i] for i in matches])}")
+				return matches
+			else:
+				return exact_matches
 		return matches
 
 	def predict(self):
