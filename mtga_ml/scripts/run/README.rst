@@ -1,1 +1,1 @@
-Scripts for training models on 17lands datasets.
+Scripts for using trained models to advise MTGA gameplay.
