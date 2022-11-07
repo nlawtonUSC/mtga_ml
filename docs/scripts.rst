@@ -14,6 +14,5 @@ run
 
 .. include:: ../mtga_ml/scripts/run/README.rst
 
-.. automodule:: mtga_ml.scripts.run:draft_assistant
+.. automodule:: mtga_ml.scripts.run.draft_assistant
 	:members:
-	
