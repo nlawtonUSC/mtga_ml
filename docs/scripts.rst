@@ -4,13 +4,13 @@ Scripts
 :code:`train`
 -------------
 
-Scripts for training models on 17lands datasets.
+.. include:: mtga_ml.scripts.train.README.rst
 
 .. automodule:: mtga_ml.scripts.train 
 
 :code:`run`
 -----------
 
-Scripts for using trained models to advise MTGA gameplay.
+.. include:: mtga_ml.scripts.run.README.rst
 
 .. automodule:: mtga_ml.scripts.run 
