@@ -1,9 +1,6 @@
 .. include:: ../README.rst
 
-Welcome to `mtga_ml`'s documentation!
 =====================================
-
-Machine learning tools for MTGA.
 
 .. note::
 
@@ -17,3 +14,4 @@ Contents
    Home <self>
    preprocess
    ml
+   scripts
