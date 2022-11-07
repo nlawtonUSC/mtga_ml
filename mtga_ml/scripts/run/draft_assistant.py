@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Command line UI for using trained a `PickModel` to advise an MTGA draft.
+Command line UI for using a trained `PickModel` to advise an MTGA draft.
 """
 
 import sys
@@ -13,6 +13,12 @@ import torch
 import numpy as np
 
 class DraftAssistant:
+	"""Class for maintaining a user description of a draft state.
+
+	Args:
+		model(PickModel):
+			Trained `PickModel` for advising the draft.
+	"""
 	def __init__(self, model):
 		self.model = model
 		self.card_names = model.card_names
