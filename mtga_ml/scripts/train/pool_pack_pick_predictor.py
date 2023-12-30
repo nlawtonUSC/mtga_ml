@@ -145,7 +145,8 @@ def main():
 
 	optimizer = torch.optim.Adam(
 		model.parameters(), 
-		lr=args.learning_rate
+		lr=args.learning_rate,
+		weight_decay=1e-4
 	)
 
 	max_train_steps = args.num_epochs * len(train_dataset) // args.train_batch_size
@@ -153,6 +154,10 @@ def main():
 	max_val_steps = args.num_epochs * len(validation_dataset) // args.validation_batch_size
 
 	progress_bar = tqdm(range(max_train_steps + max_val_steps))
+
+	device = torch.device('cpu') #torch.device('cuda' if torch.cuda.is_available else 'cpu')
+
+	model = model.to(device)
 
 	# Train loop
 	for epoch in range(args.num_epochs):
@@ -163,6 +168,7 @@ def main():
 		train_steps = 0
 		model.train()
 		for batch in train_loader:
+			batch = { k:v.to(device) for (k,v) in batch.items() }
 			logits = model(batch)
 			L = loss_func(logits, batch['pick'])
 			optimizer.zero_grad()
@@ -181,6 +187,7 @@ def main():
 		validation_steps = 0
 		model.eval()
 		for batch in validation_loader:
+			batch = { k:v.to(device) for (k,v) in batch.items() }
 			logits = model(batch)
 			L = loss_func(logits, batch['pick'])
 			validation_loss += L.item()

@@ -9,6 +9,7 @@ import requests
 
 import pandas as pd
 import torch
+import numpy as np
 from torch.utils.data import Dataset, DataLoader
 from tqdm.auto import tqdm
 
@@ -59,8 +60,12 @@ def load_17lands_data(output_dir, mtga_set, mtga_format, dataset_type,
                 for chunk in r.iter_content(chunk_size=chunk_size):
                     f.write(chunk)
                     progress_bar.update(chunk_size)
-    return pd.read_csv(csv_path, nrows=nrows)
-
+    header_df = pd.read_csv(csv_path, nrows=0)
+    col_dtypes = dict()
+    for col_idx, col_name in enumerate(header_df.columns):
+        if 'pack_' in col_name or 'pack_card_' in col_name:
+            col_dtypes[col_idx] = np.int8
+    return pd.read_csv(csv_path, nrows=nrows, dtype=col_dtypes)
 
 class PicksDataset(Dataset):
     """Loads 17lands draft data as a PyTorch Dataset. Each row represents a
@@ -144,6 +149,98 @@ class PicksDataset(Dataset):
             batch["pick"] = self.card_names.index(row[self.pick_idx])
         return batch
 
+def make_decks_df(picks_dataset):
+    df = picks_dataset.df
+    num_cards = picks_dataset.num_cards
+    card_names = picks_dataset.card_names
+    meta_cols = []
+    for col_name in df.columns:
+        if not('pick' in col_name or 'pack_' in col_name or 'pool_' in col_name):
+            meta_cols.append(col_name)
+    for x in meta_cols:
+        print(x)
+    decks = dict()
+    for idx, row in df.iterrows():
+        if idx % 1000 == 0:
+            print(idx, len(df))
+        draft_id = row['draft_id']
+        if draft_id not in decks:
+            decks[draft_id] = dict()
+            decks[draft_id]['deck'] = np.zeros(num_cards)
+            decks[draft_id]['sideboard'] = np.zeros(num_cards)
+            for col_name in meta_cols:
+                decks[draft_id][col_name] = row[col_name]
+        else:
+            pick = row['pick']
+            pick_idx = card_names.index(pick)
+            maindeck_rate = row['pick_maindeck_rate']
+            decks[draft_id]['deck'][pick_idx] += maindeck_rate
+            decks[draft_id]['sideboard'][pick_idx] += 1 - maindeck_rate
+    for deck in decks.values():
+        for card_idx, card_name in enumerate(card_names):
+            deck['deck_' + card_name] = deck['deck'][card_idx]
+            deck['sideboard_' + card_name] = deck['sideboard'][card_idx]
+        deck.pop('deck')
+        deck.pop('sideboard')
+    fieldnames = meta_cols \
+        + ['deck_' + card_name for card_name in card_names] \
+        + ['sideboard_' + card_name for card_name in card_names]
+    df = pd.DataFrame.from_dict(decks, orient='index', columns=fieldnames)
+    return df
 
+class DecksDataset(Dataset):
+    """
+    A class.
+    """
 
+    def __init__(self, df, keys=None):        
+        # Read `.csv` with `pandas`.
+        self.df = df
+        # keys to collate in `__getitem__`.
+        if keys != None:
+            self.keys = keys
+        else:
+            self.keys = [ x for x in df.columns if not ("deck_" in x or "sideboard_" in x) ]
+            self.keys += ["deck", "sideboard"]
+        # Rearrange columns for sanity
+        pool_pack_cols = [ x for x in self.df.columns if ("deck_" in x or "sideboard_" in x) ]
+        other_cols = [ x for x in self.df.columns if not ("deck_" in x or "sideboard_" in x) ]
+        sorted_cols = other_cols + sorted(pool_pack_cols)
+        self.df = self.df.reindex(columns=sorted_cols)
+        # Extract card names
+        self.card_names = [ x.split('_')[-1] for x in self.df.columns if "deck_" in x ]
+        self.num_cards = len(self.card_names)
+        # Calculate `pack_card` range
+        deck_idxs = [ i for (i,x) in enumerate(self.df.columns) if "deck_" in x ]
+        self.deck_min_idx = min(deck_idxs)
+        self.deck_max_idx = max(deck_idxs)+1
+        # Calculate `pool` range
+        sideboard_idxs = [ i for (i,x) in enumerate(self.df.columns) if "sideboard_" in x ]
+        self.sideboard_min_idx = min(sideboard_idxs)
+        self.sideboard_max_idx = max(sideboard_idxs)+1
 
+    def __len__(self):
+        """Number of rows in dataset."""
+        return self.df.shape[0]
+
+    def __getitem__(self, idx):
+        """Fetch row from dataset.
+
+        Args:
+            idx(int): Index of row to return.
+
+        Returns:
+            A `dict` representation of the row at index `idx`.
+        """
+        row = self.df.iloc[idx]
+        batch = dict()
+        for key in self.keys:
+            if key not in ["deck", "sideboard"]:
+                batch[key] = row[key]
+        if "rank" in self.keys:
+            batch["rank"] = str(batch["rank"])
+        if "deck" in self.keys:
+            batch["deck"] = torch.tensor(row[self.deck_min_idx:self.deck_max_idx], dtype=torch.float)
+        if "sideboard" in self.keys:
+            batch["sideboard"] = torch.tensor(row[self.sideboard_min_idx:self.sideboard_max_idx], dtype=torch.float)
+        return batch

@@ -4,6 +4,7 @@ Machine learning model architectures.
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 def mlp(dims, activation_function, use_batchnorm=False, dropout_rate=0.0):
 	"""Multi-layer perceptron.
